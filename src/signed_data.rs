@@ -217,6 +217,14 @@ pub static ECDSA_P384_SHA384: SignatureAlgorithm = SignatureAlgorithm {
     verification_alg: &signature::ECDSA_P384_SHA384_ASN1,
 };
 
+/// RSA PKCS#1 1.5 signatures using SHA-1 for keys of 1024-8192 bits.
+pub static RSA_PKCS1_1024_8192_SHA1_LEGACY_KEY: SignatureAlgorithm = SignatureAlgorithm {
+    public_key_alg_id: RSA_ENCRYPTION,
+    signature_alg_id: RSA_PKCS1_SHA1,
+    verification_alg: &signature::RSA_PKCS1_1024_8192_SHA1_FOR_LEGACY_USE_ONLY,
+};
+
+
 /// RSA PKCS#1 1.5 signatures using SHA-256 for keys of 2048-8192 bits.
 pub static RSA_PKCS1_2048_8192_SHA256: SignatureAlgorithm = SignatureAlgorithm {
     public_key_alg_id: RSA_ENCRYPTION,
@@ -306,6 +314,10 @@ const ECDSA_SHA384: AlgorithmIdentifier = AlgorithmIdentifier {
 
 const RSA_ENCRYPTION: AlgorithmIdentifier = AlgorithmIdentifier {
     asn1_id_value: untrusted::Input::from(include_bytes!("data/alg-rsa-encryption.der")),
+};
+
+const RSA_PKCS1_SHA1: AlgorithmIdentifier = AlgorithmIdentifier {
+    asn1_id_value: untrusted::Input::from(include_bytes!("data/alg-rsa-pkcs1-sha1.der")),
 };
 
 const RSA_PKCS1_SHA256: AlgorithmIdentifier = AlgorithmIdentifier {
@@ -710,5 +722,8 @@ mod tests {
         // they are nonsensical combinations.
         &signed_data::ECDSA_P256_SHA384, // Truncates digest.
         &signed_data::ECDSA_P384_SHA256, // Digest is unnecessarily short.
+
+        // Algorithms deprecated because they are bad.
+        &signed_data::RSA_PKCS1_1024_8192_SHA1_LEGACY_KEY,
     ];
 }
